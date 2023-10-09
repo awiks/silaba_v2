@@ -1,0 +1,224 @@
+{
+  "card":[
+    {
+      "category" : "App Desktop",
+      "filter":"filter_1",
+      "image" :[
+        {
+          "title":"App 1",
+          "description":"Lorem ipsum, dolor sit amet consectetur",
+          "url":"http://127.0.0.1:8000/media/app-3-1694426486.jpg",
+        },
+      ],
+    },
+    {
+      "category" : "App Mobile",
+      "filter":"filter_2",
+      "image" :[
+        {
+          "title":"App 1",
+          "description":"Lorem ipsum, dolor sit amet consectetur",
+          "url":"http://127.0.0.1:8000/media/app-3-1694426486.jpg",
+        },
+      ],
+    }
+  ]
+}
+
+
+
+
+@extends('Template.App')
+@section('title',$title)
+@section('content')
+<section class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0">{{ $title }}</h1>
+    </div><!-- /.container-fluid -->
+</section>
+<form action="{{ url('backend/pages/service') }}" method="post">
+    @csrf
+<div class="card elevation-0 mb-2">
+    <div class="card-body pb-0">
+
+        <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" value="{{ old('title') }}" class="form-control @error('title') is-invalid @enderror">
+            @error('title')
+                <span class="error invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label>Deskripsi</label>
+            <textarea name="description" class="form-control @error('description') is-invalid @enderror" rows="2">{{ old('description') }}</textarea>
+            @error('description')
+                <span class="error invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="form-group">
+            <label>Style Page</label>
+            <textarea name="style" class="form-control @error('style') is-invalid @enderror" rows="2">{{  old('style') }}</textarea>
+            @error('style')
+                <span class="error invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+
+        @php $active_checked = old('active_checked'); @endphp
+        <div class="form-group">
+            <div class="custom-control custom-switch">
+                <input type="hidden" value="0" name="active_checked">
+                <input type="checkbox" name="active_checked" value="1" id="customSwitchBuy" class="custom-control-input" @if( $active_checked  == 1 ) checked @endif>
+                <label class="custom-control-label text-primary" for="customSwitchBuy">Aktikan</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="Card_new"></div>
+
+<div class="card elevation-0">
+    <div class="card-body py-2">
+        <button type="button" class="btn btn-default add_field_card">
+            <i class="fas fa-plus"></i> Tambah Kategori
+        </button>
+    </div>
+</div>
+
+<div class="card elevation-0">
+    <div class="card-body">
+        <button type="button" class="btn btn-warning" onclick="location.href='{{ url('/backend/pages/service') }}'">
+            <i class="fas fa-solid fa-arrow-left"></i> Kembali
+         </button>
+
+        <button type="submit" class="btn btn-success">
+            <i class="far fa-save"></i> Perbarui
+        </button>
+
+     </div>
+</div>
+</form>
+@endsection
+
+@push('Javascript')
+<script type="text/javascript">
+$(document).ready(function() {
+
+    let count_cat =0;
+    function add_card_field()
+    {
+        let html ='';
+        html +='<div class="card elevation-0 mb-2" id="Card">';
+        html +='<div class="card-body">';
+
+            let remove_button_cat = '';
+
+            if( count_cat > 0 )
+            {
+                remove_button_cat = '<button type="button" class="btn btn-danger btn-sm float-right mb-2 remove_cat"><i class="fas fa-times-circle"></i> Hapus <span class="badge badge-warning">'+count_cat+'</span></button>';
+            }
+
+        html +='<div class="form-group">';
+            html +='<label>Kategori</label>';
+            html += ''+remove_button_cat+'';
+                    html +='<input type="text" name="category[]" class="form-control">';
+                    html +='</div>';
+        html +='<div class="table-responsive">';
+            html +='<table class="table" id="TableCard_'+count_cat+'">';
+                html +='<thead>';
+                    html +='<tr>';
+                        html +='<th>Title</th>';
+                        html +='<th>Deskripsi</th>';
+                        html +='<th>Link Image</th>';
+                        html +='<th width="5%">#</th>';
+                        html +='</tr>';
+                        html +='</thead>';
+                        html +='<tbody></tbody>';
+                html += '<tfoot>'+
+                            '<tr>'+
+                                '<td colspan="4">'+
+                                    '<button type="button" id="adds'+count_cat+'" class="btn btn-default btn-sm">'+
+                                        '<i class="fas fa-plus-circle"></i> Tambah'+
+                                    '</button>'+
+                                '</td>'+
+                            '</tr>'+
+                        '</tfoot>';
+                html +='</table>';
+            html +='</div>';
+        html +='</div>';
+        html +='</div>';
+
+
+        $('#Card_new').append(html);
+
+        function add_input_field(count_cat)
+        {
+            var count_field = $('#TableCard_'+count_cat+' tbody tr').length;
+            var Baris  = '<tr>';
+            Baris +='<td><input type="text" name="title['+count_field+']" class="form-control"></td>';
+            Baris +='<td><input type="text" name="description[]" class="form-control"></td>';
+            Baris +='<td><input name="url[]" class="form-control"></td>';
+
+            let remove_button = '';
+
+            if( count_field > 0 )
+            {
+                remove_button = '<button type="button" class="btn btn-danger remove_'+count_cat+'"><i class="fas fa-times-circle"></i>'+count_field+'</button>';
+            }
+
+            Baris += '<td>'+remove_button+'</td></tr>';
+
+            $('#TableCard_'+count_cat+' tbody').append(Baris);
+        }
+
+        add_input_field(count_cat);
+
+        $(document).on('click','#adds'+count_cat+'',function(){
+            $('#TableCard_'+count_cat+' tbody').append(add_input_field(count_cat));
+        });
+
+        $(document).on('click','.remove_'+count_cat+'',function(){
+            $(this).closest('tr').remove();
+        });
+
+    } //END_CARD_FIELD
+
+    add_card_field();
+
+    $(document).on('click','.add_field_card',function(){
+        count_cat++;
+        alert(count_cat);
+        add_card_field(count_cat);
+    });
+
+    $(document).on('click', '.remove_cat', function () {
+        $(this).parents('#Card').remove();
+    });
+
+    // TABLE
+
+    function add_input_field(count_cat)
+    {
+        var count_field = $('#TableCard_'+count_cat+' tbody tr').length;
+        var Baris  = '<tr>';
+        Baris +='<td><input type="text" name="title['+count_field+']" class="form-control"></td>';
+        Baris +='<td><input type="text" name="description[]" class="form-control"></td>';
+        Baris +='<td><input name="url[]" class="form-control"></td>';
+
+        let remove_button = '';
+
+        if( count_field > 0 )
+        {
+            remove_button = '<button type="button" class="btn btn-danger remove_'+count_cat+'"><i class="fas fa-times-circle"></i>'+count_field+'</button>';
+        }
+
+        Baris += '<td>'+remove_button+'</td></tr>';
+
+        $('#TableCard_'+count_cat+' tbody').append(Baris);
+    }
+
+});
+</script>
+@endpush
