@@ -48,6 +48,7 @@ class ContactRequest extends FormRequest
             'npwp' =>['nullable','max:50',Rule::unique('contacts')->ignore($this->contact)],
             'payment_address' => ['nullable','max:225'],
             'shipping_address' => ['nullable','max:225'],
+
             'receivable_account' => ['nullable'],
             'accounts_payable' => ['nullable'],
 

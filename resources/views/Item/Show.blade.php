@@ -23,7 +23,7 @@
     <div class="card-body">
         
         <div class="row">
-            <div class="col-8 col-md-8">
+            <div class="col-9 col-md-9">
                 <table class="table table-borderless table-sm">
                     <tr>
                         <th width="20%">Kode / SKU</th>
@@ -57,7 +57,7 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-4 col-md-4">
+            <div class="col-3 col-md-3">
                @if ( $item->images != null )
                <img src="{{ $item->images }}" class="img-fluid rounded" alt="images">
                @endif 

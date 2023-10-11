@@ -47,40 +47,6 @@ class TaxController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function recycle_bin()
-    {
-        $array = array(
-            'title' => 'Pengaturan / Keranjang Sampah Pajak',
-            'tax' => Tax::onlyTrashed()->orderBy('id','asc')->get(),
-        );
-        
-        return view('Setting/Tax/Recycle_bin',$array);
-    }
-
-    public function restore(Request $request)
-    {
-        try {
-            if( $request->id == null ){
-                return redirect('setting/tax/recycle_bin');
-            }
-            else{
-                if( $request->input('restore') === 'restore' ){
-                    Tax::whereIn('id',$request->id)->restore();
-                    return redirect('setting/tax')->with('success', 'Data berhasil diperbarui');
-                }
-                elseif( $request->input('forever') === 'forever' ){
-                    Tax::whereIn('id',$request->id)->forcedelete();
-                    return redirect('setting/tax')->with('success', 'Data berhasil diperbarui');
-                }
-            }
-        } catch (\Throwable $th) {
-            return redirect('setting/tax')->with('error', 'Data gagal diperbarui');
-        }
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Tax $tax)
@@ -118,6 +84,41 @@ class TaxController extends Controller
         } catch (\Throwable $th) {
             session()->flash('error','Data gagal dihapus');
             return response()->json(array('status' => 2 ));
+        }
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function recycle_bin()
+    {
+        $array = array(
+            'title' => 'Pengaturan / Keranjang Sampah Pajak',
+            'tax' => Tax::onlyTrashed()->orderBy('id','asc')->get(),
+        );
+        
+        return view('Setting/Tax/Recycle_bin',$array);
+    }
+
+    public function restore(Request $request)
+    {
+        try {
+            if( $request->id == null ){
+                return redirect('setting/tax/recycle_bin');
+            }
+            else{
+                if( $request->input('restore') === 'restore' ){
+                    Tax::whereIn('id',$request->id)->restore();
+                    return redirect('setting/tax')->with('success', 'Data berhasil diperbarui');
+                }
+                elseif( $request->input('forever') === 'forever' ){
+                    Tax::whereIn('id',$request->id)->forcedelete();
+                    return redirect('setting/tax')->with('success', 'Data berhasil diperbarui');
+                }
+            }
+        } catch (\Throwable $th) {
+            return redirect('setting/tax')->with('error', 'Data gagal diperbarui');
         }
     }
 }

@@ -6,8 +6,14 @@
     <div class="card-header">
         <button class="btn btn-primary" onclick="location.href='{{ url('contact/create') }}'">
             <i class="fas fa-plus-circle"></i> Kontak Baru
-            <span class="count badge badge-warning">1</span>
+            <span class="count badge badge-warning"></span>
         </button>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-default" onclick="location.href='{{ url('contact/recycle_bin') }}'">
+               <i class="far fa-trash-alt"></i> Keranjang Sampah
+            </button>
+        </div>
     </div>
     <div class="card-body">
 

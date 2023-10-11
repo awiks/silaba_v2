@@ -27,6 +27,7 @@ return new class extends Migration
             $table->char('npwp',50)->nullable();
             $table->char('payment_address',225)->nullable();
             $table->char('shipping_address',225)->nullable();
+            $table->longText('account_bank');
             $table->bigInteger('receivable_account');
             $table->bigInteger('accounts_payable');
             $table->integer('receivable_checked')->length(1);

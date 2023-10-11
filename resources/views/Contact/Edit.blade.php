@@ -1,7 +1,8 @@
 @extends('Template.App') 
 @section('title',$title)
 @section('content')
-<form action="{{ url('contact') }}" method="post" enctype="multipart/form-data">
+<form action="{{ url('contact/'.$contact->id.'') }}" method="post" enctype="multipart/form-data">
+    @method('PUT')
     @csrf
 <div class="card elevation-0 mb-2">
     <div class="card-header">
@@ -12,13 +13,20 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label><span class="text-danger">*</span> Nama Panggilan</label>
-                    <input type="text" name="nickname" value="{{ old('nickname') }}" class="form-control @error('nickname') is-invalid @enderror">
+                    <input type="text" name="nickname" value="{{ old('nickname') ? old('nickname') : $contact->nickname }}" class="form-control @error('nickname') is-invalid @enderror">
                     @error('nickname')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
             <div class="col-md-6">
+
+                @php
+                    $contact_type = json_encode(array($contact->contact_type));
+
+                    echo $contact_type;
+                @endphp
+
                 <div class="form-group">
                     <label><span class="text-danger">*</span> Tipe Kontak</label>
                     <select name="contact_type[]" class="form-control  @error('contact_type') is-invalid @enderror" width="100%" multiple>
@@ -68,7 +76,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label><span class="text-danger">*</span> Nama Kontak</label>
-                    <input type="text" name="contact_name" value="{{ old('contact_name') }}" class="form-control @error('contact_name') is-invalid @enderror">
+                    <input type="text" name="contact_name" value="{{ old('contact_name') ? old('contact_name') : $contact->contact_name }}" class="form-control @error('contact_name') is-invalid @enderror">
                     @error('contact_name')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -77,7 +85,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>No Handphone</label>
-                    <input type="text" name="handphone" value="{{ old('handphone') }}" class="form-control @error('handphone') is-invalid @enderror">
+                    <input type="text" name="handphone" value="{{ old('handphone') ? old('handphone') : $contact->handphone }}" class="form-control @error('handphone') is-invalid @enderror">
                     @error('handphone')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -94,11 +102,13 @@
                             <select name="identity_type" class="form-control" width="100%">
                                 @if(Request::old('identity_type') != NULL)
                                 <option value="{{Request::old('identity_type')}}">{{Request::old('identity_type')}}</option>
+                                @else
+                                <option value="{{ $contact->identity_type }}">{{ $contact->identity_type }}</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-8 col-md-8">
-                            <input type="text" name="identity_number"  value="{{ old('identity_number') }}" class="form-control @error('identity_number') is-invalid @enderror" placeholder="Nomor Identitas">
+                            <input type="text" name="identity_number"  value="{{ old('identity_number') ? old('identity_number') : $contact->identity_number }}" class="form-control @error('identity_number') is-invalid @enderror" placeholder="Nomor Identitas">
                         </div>
                     </div>
                     @error('identity_number')
@@ -109,7 +119,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Email </label> <i class="text-sm">( Email bisa lebih dari satu )</i>
-                    <input type="text" name="emails" data-role="tagsinput" value="{{ old('emails') }}" class="form-control  @error('emails') is-invalid @enderror">
+                    <input type="text" name="emails" data-role="tagsinput" value="{{ old('emails') ? old('emails') : $contact->emails }}" class="form-control  @error('emails') is-invalid @enderror">
                     @error('emails')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -119,7 +129,7 @@
 
         <div class="form-group">
             <label>Info Lainnya</label>
-            <input type="text" name="other_info" value="{{ old('other_info') }}" class="form-control @error('other_info') is-invalid @enderror">
+            <input type="text" name="other_info" value="{{ old('other_info') ? old('other_info') : $contact->other_info }}" class="form-control @error('other_info') is-invalid @enderror">
             @error('other_info')
                 <span class="error invalid-feedback">{{ $message }}</span>
             @enderror
@@ -142,7 +152,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Nama Perusahaan</label>
-                    <input type="text" name="company_name" value="{{ old('company_name') }}" class="form-control @error('company_name') is-invalid @enderror">
+                    <input type="text" name="company_name" value="{{ old('company_name') ? old('company_name') : $contact->company_name  }}" class="form-control @error('company_name') is-invalid @enderror">
                     @error('company_name')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -151,7 +161,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Telepon</label>
-                    <input type="text" name="telephone" value="{{ old('telephone') }}" class="form-control @error('telephone') is-invalid @enderror">
+                    <input type="text" name="telephone" value="{{ old('telephone') ? old('telephone') : $contact->telephone }}" class="form-control @error('telephone') is-invalid @enderror">
                     @error('telephone')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -163,7 +173,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Fax</label>
-                    <input type="text" name="fax" value="{{ old('fax') }}" class="form-control @error('fax') is-invalid @enderror">
+                    <input type="text" name="fax" value="{{ old('fax') ? old('fax') : $contact->fax }}" class="form-control @error('fax') is-invalid @enderror">
                     @error('fax')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -172,7 +182,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>NPWP</label>
-                    <input type="text" name="npwp" value="{{ old('npwp') }}" class="form-control @error('npwp') is-invalid @enderror">
+                    <input type="text" name="npwp" value="{{ old('npwp') ? old('npwp') : $contact->npwp }}" class="form-control @error('npwp') is-invalid @enderror">
                     @error('npwp')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -184,7 +194,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Alamat Pembayaran</label>
-                    <textarea name="payment_address" class="form-control @error('payment_address') is-invalid @enderror"  cols="30" >{{ old('payment_address') }}</textarea>
+                    <textarea name="payment_address" class="form-control @error('payment_address') is-invalid @enderror"  cols="30" >{{ old('payment_address') ? old('payment_address') : $contact->payment_address }}</textarea>
                     @error('payment_address')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -193,7 +203,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Alamat Pengiriman</label>
-                    <textarea name="shipping_address" class="form-control @error('shipping_address') is-invalid @enderror"  cols="30" >{{ old('shipping_address') }}</textarea>
+                    <textarea name="shipping_address" class="form-control @error('shipping_address') is-invalid @enderror"  cols="30" >{{ old('shipping_address') ? old('shipping_address') : $contact->shipping_address }}</textarea>
                     @error('shipping_address')
                         <span class="error invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -215,12 +225,9 @@
       </div>
     </div>
     <div class="card-body">
-        @php
-            $count = old('bank_name') != '' ? count(old('bank_name')) : 0;
-        @endphp
         <table id="AkunBank" width="100%">
             <tbody>
-            @if ( $count > 0 )
+            @if ( old('bank_name') )
                 @foreach ( old('bank_name') as $key => $result )
                         <tr>
                             <td class="p-2">
@@ -251,30 +258,32 @@
                         </tr>
                 @endforeach 
             @else
+                @foreach (json_decode($contact->account_bank) as $item)
                 <tr>
                     <td class="p-2">
                         <div class="form-group">
                             <label>Nama Bank</label>
-                            <input type="text" name="bank_name[]" class="form-control">
+                            <input type="text" name="bank_name[]" value="{{ $item->bank_name }}" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Pemegang Akun Bank</label>
-                            <input type="text" name="account_holder[]" class="form-control">
+                            <input type="text" name="account_holder[]" value="{{ $item->account_holder }}" class="form-control">
                         </div>
                     </td>
                     <td class="p-2">
                         <div class="form-group">
                             <label>Kantor Cabang</label>
-                            <input type="text" name="branch_office[]" class="form-control">
+                            <input type="text" name="branch_office[]" value="{{ $item->branch_office }}" class="form-control">
                         </div>
                         <div class="form-group">
                             <label>Nomor Rekening</label>
-                            <input type="text" name="account_number[]" class="form-control">
+                            <input type="text" name="account_number[]" value="{{ $item->account_number }}" class="form-control">
                         </div>
                     </td>
                     <td class="p-2" width="10%"></td>
-                </tr>    
-                @endif
+                </tr> 
+                @endforeach
+            @endif
             </tbody>
         </table>
 

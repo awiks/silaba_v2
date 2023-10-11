@@ -102,6 +102,9 @@ Route::prefix('setting')->group(function () {
     
 });
 
+Route::get('contact/recycle_bin', [ContactController::class,'recycle_bin']);
+Route::post('contact/recycle_bin', [ContactController::class,'restore']);
+
 Route::resource('setting/unit', UnitController::class);
 Route::resource('setting/brand', BrandController::class);
 Route::resource('setting/category', CategoryController::class);

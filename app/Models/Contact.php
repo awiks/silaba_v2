@@ -25,6 +25,7 @@ class Contact extends Model
         'npwp',
         'payment_address',
         'shipping_address',
+        'account_bank',
         'receivable_account',
         'accounts_payable',
         'receivable_checked',
