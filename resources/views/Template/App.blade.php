@@ -176,21 +176,7 @@
                             <li class="nav-item">
                                 <a href="{{ url('cost') }}" class="nav-link {{ ( request()->segment(1) == 'cost' ) ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-donate"></i>
-                                    <p>Stok Produk</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('cost') }}" class="nav-link {{ ( request()->segment(1) == 'cost' ) ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-donate"></i>
                                     <p>Aset tetap</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('customer') }}" class="nav-link {{ ( request()->segment(1) == 'customer' ) ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-user-tag"></i>
-                                    <p>Pelanggan</p>
                                 </a>
                             </li>
 
@@ -198,20 +184,6 @@
                                 <a href="{{ url('item') }}" class="nav-link {{ ( request()->segment(1) == 'item' ) ? 'active' : '' }}">
                                     <i class="nav-icon fa fa-archive"></i>
                                     <p>Produk</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('supplier') }}" class="nav-link {{ ( request()->segment(1) == 'supplier' ) ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-dolly nav-icon"></i>
-                                    <p>Supplier</p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a href="{{ url('employee') }}" class="nav-link {{ ( request()->segment(1) == 'employee' ) ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-users"></i>
-                                    <p>Pegawai</p>
                                 </a>
                             </li>
 
@@ -269,7 +241,7 @@
         </footer>
         {{-- end main-footer --}}
 
-        @yield('modal')
+        @yield('Modal')
 
     </div>
     {{-- end wrapper --}}

@@ -22,16 +22,17 @@
             <div class="col-md-6">
 
                 @php
-                    $contact_type = json_encode(array($contact->contact_type));
-
-                    echo $contact_type;
+                    $contact_type = json_decode($contact->contact_type);
+                    foreach ($contact_type as $key => $value) {
+                        $selected_type[$key] = $value;
+                    }
                 @endphp
 
                 <div class="form-group">
                     <label><span class="text-danger">*</span> Tipe Kontak</label>
                     <select name="contact_type[]" class="form-control  @error('contact_type') is-invalid @enderror" width="100%" multiple>
                         @foreach ($allOptionsType as $option)
-                            <option value="{{ $option['id'] }}" {{ in_array($option['id'], old('contact_type',[])) ? 'selected' : '' }}>
+                            <option value="{{ $option['id'] }}" {{ in_array($option['id'], old('contact_type',[]) ? old('contact_type',[]) : $selected_type) ? 'selected' : '' }}>
                                 {{ $option['text'] }}
                             </option>
                         @endforeach
@@ -258,7 +259,7 @@
                         </tr>
                 @endforeach 
             @else
-                @foreach (json_decode($contact->account_bank) as $item)
+                @foreach (json_decode($contact->account_bank) as $key => $item)
                 <tr>
                     <td class="p-2">
                         <div class="form-group">
@@ -280,7 +281,11 @@
                             <input type="text" name="account_number[]" value="{{ $item->account_number }}" class="form-control">
                         </div>
                     </td>
-                    <td class="p-2" width="10%"></td>
+                    <td class="p-2" width="10%">
+                        @if ($key > 0)
+                            <button type="button" class="btn btn-default remove"><i class="fas fa-times-circle"></i></button>
+                        @endif
+                    </td>
                 </tr> 
                 @endforeach
             @endif
@@ -308,12 +313,13 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Akun Piutang</label>
+                    @php
+                        $receivable_account = old('receivable_account') ? old('receivable_account') : $contact->receivable_account;
+                        $value = $account_list->where('id', intval($receivable_account))->first();
+                    @endphp
                     <select name="receivable_account" class="form-control @error('receivable_account') is-invalid @enderror">
-                        @if(Request::old('receivable_account') != NULL)
-                           @php
-                               $value = $account_list->where('id', intval(Request::old('receivable_account')))->first();
-                           @endphp
-                            <option value="{{Request::old('receivable_account')}}">{{ $value->lists_code.' - '.$value->lists_name }}</option>
+                        @if( $receivable_account != NULL)
+                            <option value="{{ $receivable_account }}">{{ $value->lists_code.' - '.$value->lists_name }}</option>
                         @endif
                     </select>
                     @error('receivable_account')
@@ -324,12 +330,16 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Akun Hutang</label>
+                    @php
+                        $accounts_payable = old('accounts_payable') ? old('accounts_payable') : $contact->accounts_payable;
+                        $value = $account_list->where('id', intval($accounts_payable))->first();
+                    @endphp
                     <select name="accounts_payable" class="form-control @error('accounts_payable') is-invalid @enderror">
-                        @if(Request::old('accounts_payable') != NULL)
+                        @if($accounts_payable != NULL)
                            @php
-                               $value = $account_list->where('id', intval(Request::old('accounts_payable')))->first();
+                               $value = $account_list->where('id', intval($accounts_payable))->first();
                            @endphp
-                            <option value="{{Request::old('accounts_payable')}}">{{ $value->lists_code.' - '.$value->lists_name }}</option>
+                            <option value="{{ $accounts_payable }}">{{ $value->lists_code.' - '.$value->lists_name }}</option>
                         @endif
                     </select>
                     @error('accounts_payable')
@@ -345,14 +355,15 @@
                     <label>Maksimal Piutang</label>
                     <div class="row">
                         <div class="col-md-6">
+                            @php $receivable_checked = old('receivable_checked') ? old('receivable_checked') : $contact->receivable_checked; @endphp
                             <div class="custom-control custom-switch mt-2">
                                 <input type="hidden" value="0" name="receivable_checked">
-                                <input type="checkbox" name="receivable_checked" value="1" id="customSwitchCre" class="custom-control-input" @if( old('receivable_checked') == 1 ) checked @endif>
+                                <input type="checkbox" name="receivable_checked" value="1" id="customSwitchCre" class="custom-control-input" @if( $receivable_checked == 1 ) checked @endif>
                                 <label class="custom-control-label text-primary" for="customSwitchCre">Aktifkan Maksimal Piutang</label>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <input type="text" name="credit_limit" placeholder="Maksimal Piutang" value="{{ old('credit_limit') }}" class="form-control @error('credit_limit') is-invalid @enderror" @if( old('receivable_checked') == 1 ) style="display:block" @else style="display:none" @endif>
+                            <input type="text" name="credit_limit" placeholder="Maksimal Piutang" value="{{ old('credit_limit') ? old('credit_limit') : $contact->credit_limit }}" class="form-control @error('credit_limit') is-invalid @enderror" @if( $receivable_checked == 1 ) style="display:block" @else style="display:none" @endif>
                         </div>
                     </div>
                     @error('credit_limit')
@@ -390,8 +401,8 @@
         <button type="button" class="btn btn-warning" onclick="location.href='{{ url('/contact') }}'">
             <i class="fas fa-solid fa-arrow-left"></i> Kembali
          </button>
-         <button type="submit" class="btn btn-primary">
-            <i class="far fa-save"></i> Simpan
+         <button type="submit" class="btn btn-success">
+            <i class="far fa-save"></i> Perbarui
          </button>
     </div>
 </div>

@@ -27,7 +27,7 @@ class ItemRequest extends FormRequest
             'barcode' => ['nullable','sometimes','max:50',Rule::unique('items')->ignore($this->item)],
             'brand_id' => ['required'],
             'category_id' => ['required'],
-            'item_name' => ['required','max:150',Rule::unique('items')->ignore($this->item)],
+            'item_name' => ['required','max:225',Rule::unique('items')->ignore($this->item)],
             'description' => ['nullable'],
             'buy_checked' => ['sometimes'],
             'account_buy' => ['nullable','required_if:buy_checked,1'],
@@ -40,7 +40,7 @@ class ItemRequest extends FormRequest
             'inventory_checked' => ['sometimes'],
             'minimum_stock' => ['nullable','required_if:inventory_checked,1','numeric'],
             'account_inventory' => ['nullable','required_if:inventory_checked,1'],
-            'images' => ['nullable','mimes:jpg,png,jpeg,svg','max:1024'],
+            'images' => ['nullable','mimes:jpg,png,jpeg,svg,webp','max:1024'],
 
             'unit_id' => ['required'],
             'buy_price' => ['nullable','required_if:buy_checked,1','numeric'],

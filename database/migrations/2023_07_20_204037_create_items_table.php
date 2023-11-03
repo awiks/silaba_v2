@@ -17,8 +17,9 @@ return new class extends Migration
             $table->char('barcode',50)->unique()->nullable();
             $table->bigInteger('brand_id');
             $table->bigInteger('category_id');
-            $table->string('item_name',150);
-            $table->string('description')->nullable();
+            $table->longText('unit');
+            $table->string('item_name',225);
+            $table->longText('description')->nullable();
             $table->integer('buy_checked')->length(1);
             $table->bigInteger('account_buy');
             $table->bigint('tax_buy_id')->nullable();

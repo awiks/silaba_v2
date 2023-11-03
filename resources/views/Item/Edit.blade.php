@@ -37,13 +37,14 @@
             </div>
             <div class="col-md-4">
                 @php
-                $unit_show = $unitCheck->unit_id ? $unitCheck->unit_id : null;
+                $unit_show = $unit->unit_id ? $unit->unit_id : null;
                 $unit_id_old = Request::old('unit_id') ? Request::old('unit_id') : $unit_show; @endphp
                 <div class="form-group">
-                    <label>Satuan</label>
-                    <select name="unit_id" class="form-control" style="width:100%">
+                    <label><span class="text-danger">*</span> Satuan</label>
+                    <i class="text-danger">Harap pilih Satuan terkecil.</i>
+                    <select name="unit_id" class="form-control @error('unit_id') is-invalid @enderror" style="width:100%">
                         @if( $unit_id_old != NULL)
-                            <option value="{{$unit_id_old}}">{{ $unitCheck->where('unit_id', intval($unit_id_old))->first()->unit->unit_name}}</option>
+                            <option value="{{$unit_id_old}}">{{ $units->where('id', intval($unit_id_old))->first()->unit_name}}</option>
                         @endif
                     </select>
                 </div>
@@ -122,7 +123,7 @@
                     <td width="40%">
                         <div class="form-group">
                             <label>Harga Beli Satuan</label>
-                            <input type="text" name="buy_price" value="{{ old('buy_price') ? old('buy_price') : $unitCheck->buy_price }}" class="form-control @error('buy_price') is-invalid @enderror">
+                            <input type="text" name="buy_price" value="{{ old('buy_price') ? old('buy_price') : $unit->buy_price }}" class="form-control @error('buy_price') is-invalid @enderror">
                             @error('buy_price')
                                 <span class="error invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -184,7 +185,7 @@
                     <td width="40%">
                         <div class="form-group">
                             <label>Harga Jual Satuan</label>
-                            <input type="text" name="sell_price" value="{{ old('sell_price') ? old('sell_price') : $unitCheck->sell_price }}" class="form-control @error('sell_price') is-invalid @enderror">
+                            <input type="text" name="sell_price" value="{{ old('sell_price') ? old('sell_price') : $unit->sell_price }}" class="form-control @error('sell_price') is-invalid @enderror">
                             @error('sell_price')
                                 <span class="error invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -284,6 +285,13 @@
 </form>
 @endsection
 
+@section('Notify')
+@include('Template.Notify')
+@endsection
+
+@section('Modal')
+@include('Template.Modal')
+@endsection
 
 @section('javascript')
 <script type="text/javascript">
@@ -310,7 +318,60 @@ $('[name="brand_id"]').select2({
         cache: true
     },
     }).on('select2:open', () => {
-    $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/brand/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
+        $(".select2-results:not(:has(a))").append('<a href="#modal_add" data-toggle="modal" class="select_add add_brand"><i class="fas fa-plus"></i> Add</a>');
+});
+
+$(document).on('click', '.add_brand', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+
+    $('[name="brand_id"]').select2("close");
+
+    $.ajax({
+        url: '{!! route('item.modal_brand') !!}',
+        type: 'post',
+        dataType: 'html',
+        data: {_token:'{!! csrf_token() !!}'},
+    })
+    .done(function(data) {
+        $('.modal_show').html(data);
+    });
+});
+
+$(document).on('submit', '#simpanBrand', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('.btn_add').prop('disabled', true);
+
+    $.ajax({
+        url: '{!! route('item.create_brand') !!}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:function(){
+            $('.btn_add').html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...');
+        }
+    })
+    .done(function(json) {
+        $.notify(json.message,{
+            position:"top center",
+            className :json.class_name
+        });
+        $('.btn_add').prop('disabled', false);
+        $('#modal_add .close').click();
+    })
+    .fail(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    })
+    .always(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    });
+
 });
 
 $('[name="category_id"]').select2({
@@ -333,7 +394,59 @@ $('[name="category_id"]').select2({
         cache: true
     },
     }).on('select2:open', () => {
-    $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/category/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
+        $(".select2-results:not(:has(a))").append('<a href="#modal_add" data-toggle="modal" class="select_add add_cat"><i class="fas fa-plus"></i> Add</a>');
+});
+
+$(document).on('click', '.add_cat', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('[name="category_id"]').select2("close");
+
+    $.ajax({
+        url: '{!! route('item.modal_cat') !!}',
+        type: 'post',
+        dataType: 'html',
+        data: {_token:'{!! csrf_token() !!}'},
+    })
+    .done(function(data) {
+        $('.modal_show').html(data);
+    });
+});
+
+$(document).on('submit', '#simpanCategory', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('.btn_add').prop('disabled', true);
+
+    $.ajax({
+        url: '{!! route('item.create_cat') !!}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:function(){
+            $('.btn_add').html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...');
+        }
+    })
+    .done(function(json) {
+        $.notify(json.message,{
+            position:"top center",
+            className :json.class_name
+        });
+        $('.btn_add').prop('disabled', false);
+        $('#modal_add .close').click();
+    })
+    .fail(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    })
+    .always(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    });
+
 });
 
 $('[name="unit_id"]').select2({
@@ -356,7 +469,60 @@ $('[name="unit_id"]').select2({
         cache: true
     },
     }).on('select2:open', () => {
-    $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/unit/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
+        $(".select2-results:not(:has(a))").append('<a href="#modal_add" data-toggle="modal" class="select_add add_unit"><i class="fas fa-plus"></i> Add</a>');
+});
+
+$(document).on('click', '.add_unit', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+
+    $('[name="unit_id"]').select2("close");
+
+    $.ajax({
+        url: '{!! route('item.modal_unit') !!}',
+        type: 'post',
+        dataType: 'html',
+        data: {_token:'{!! csrf_token() !!}'},
+    })
+    .done(function(data) {
+        $('.modal_show').html(data);
+    });
+});
+
+$(document).on('submit', '#simpanUnit', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('.btn_add').prop('disabled', true);
+
+    $.ajax({
+        url: '{!! route('item.create_unit') !!}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:function(){
+            $('.btn_add').html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...');
+        }
+    })
+    .done(function(json) {
+        $.notify(json.message,{
+            position:"top center",
+            className :json.class_name
+        });
+        $('.btn_add').prop('disabled', false);
+        $('#modal_add .close').click();
+    })
+    .fail(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    })
+    .always(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    });
+
 });
 
 $('[name="account_buy"]').select2({
@@ -478,16 +644,16 @@ $('#summernote').summernote({
     height: $(document).height() - ($("#Maintable").height() + $("#TblTop").height() + 60),
     placeholder: 'Deskripsi produk...',
     tabsize: 2,
-    lineHeights: ['0.5', '1.0','1.5','2.0','2.5','3.0'],
     toolbar: [
-          ['style', ['style']],
-          ['font', ['bold', 'underline', 'clear']],
-          ['color', ['color']],
-          ['para', ['ul', 'ol', 'paragraph']],
-          ['height', ['height']],
-          ['table', ['table']],
-          ['insert', ['picture', ]],
-          ['view', ['fullscreen', 'codeview']]
+            ['style', ['style']],
+            ['font', ['bold', 'underline','italic', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height','lineHeights']],
+            ['table', ['table']],
+            ['insert', ['picture', ]],
+            ['view', ['fullscreen', 'codeview']],
         ]
 });
 

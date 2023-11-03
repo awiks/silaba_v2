@@ -196,6 +196,12 @@ outline:0px;
   font-weight: 500;
 }
 
+.btn-primary.disabled, .btn-primary:disabled {
+  color: #fff;
+  background-color: #1E33F2;
+  border-color: #1E33F2;
+}
+
 .btn-primary {
   color: #fff;
   background-color: #1E33F2;
@@ -274,24 +280,6 @@ outline:0px;
   color: #000;
   background-color: #FFAC30;
   border-color: #FFAC30;
-  box-shadow: none;
-}
-
-.btn-light {
-  background: #c8c8c8;
-  border-color: #c8c8c8;
-  color: #fff;
-  &:hover{
-    background: #c8c8c8;
-    color: #6e6e6e;
-    border-color: #c8c8c8;
-  }
-}
-
-.btn-light.focus, .btn-light:focus {
-  color: #fff;
-  background-color: #c8c8c8;
-  border-color: #c8c8c8;
   box-shadow: none;
 }
 

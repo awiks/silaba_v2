@@ -98,11 +98,11 @@ class AccountSubHeaderController extends Controller
             else{
                 if( $request->input('restore') === 'restore' ){
                     Account_sub_header::whereIn('id',$request->id)->restore();
-                    return redirect('setting/account_sub_header')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/account_sub_header')->with('success', 'Data berhasil dipulihkan');
                 }
                 elseif( $request->input('forever') === 'forever' ){
                     Account_sub_header::whereIn('id',$request->id)->forcedelete();
-                    return redirect('setting/account_sub_header')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/account_sub_header')->with('success', 'Data berhasil dihapus secara permanen');
                 }
             }
         } catch (\Throwable $th) {

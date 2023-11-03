@@ -35,16 +35,17 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label>Satuan * </label>
+                    <label><span class="text-danger">*</span> Satuan</label>
                     <i class="text-danger">Harap pilih Satuan terkecil.</i>
-                    <select name="unit_id" class="form-control @error('unit_id') is-invalid @enderror" style="width:100%">
-                        @if(Request::old('unit_id') != NULL)
-                        <option value="{{Request::old('unit_id')}}">{{$units->where('id', intval(Request::old('unit_id')))->first()->unit_name}}</option>
+                    <select name="unit_id" class="form-control  @error('unit_id') is-invalid @enderror" style="width:100%">
+                       @if(Request::old('unit_id') != NULL)
+                            @php
+                                $value_unit = $units->where('id', intval(Request::old('unit_id')))->first();
+                            @endphp
+                            <option value="{{Request::old('unit_id')}}">{{ $value_unit->unit_name }}</option>
                         @endif
+
                     </select>
-                    @error('unit_id')
-                        <span class="error invalid-feedback">{{ $message }}</span>
-                    @enderror
                 </div>
             </div>
         </div>
@@ -85,7 +86,7 @@
                 <div class="custom-file">
                   <input type="file" class="custom-file-input @error('images') is-invalid @enderror" name="images">
                   <label class="custom-file-label">
-                  Choose file only JPG | PNG | JPEG | SVG
+                  JPG | PNG | JPEG | SVG
                   </label>
                 </div>
             </div>
@@ -277,9 +278,13 @@
 </div>
 </form>
 @endsection
-
+{{-- array_merge --}}
 @section('Notify')
 @include('Template.Notify')
+@endsection
+
+@section('Modal')
+@include('Template.Modal')
 @endsection
 
 @section('javascript')
@@ -306,9 +311,61 @@ $('[name="brand_id"]').select2({
         cache: true
     },
     }).on('select2:open', () => {
-    $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/brand/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
+    $(".select2-results:not(:has(a))").append('<a href="#modal_add" data-toggle="modal" class="select_add add_brand"><i class="fas fa-plus"></i> Add</a>');
 });
 
+$(document).on('click', '.add_brand', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+
+    $('[name="brand_id"]').select2("close");
+
+    $.ajax({
+        url: '{!! route('item.modal_brand') !!}',
+        type: 'post',
+        dataType: 'html',
+        data: {_token:'{!! csrf_token() !!}'},
+    })
+    .done(function(data) {
+        $('.modal_show').html(data);
+    });
+});
+
+$(document).on('submit', '#simpanBrand', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('.btn_add').prop('disabled', true);
+
+    $.ajax({
+        url: '{!! route('item.create_brand') !!}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:function(){
+            $('.btn_add').html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...');
+        }
+    })
+    .done(function(json) {
+        $.notify(json.message,{
+            position:"top center",
+            className :json.class_name
+        });
+        $('.btn_add').prop('disabled', false);
+        $('#modal_add .close').click();
+    })
+    .fail(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    })
+    .always(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    });
+
+});
 
 $('[name="category_id"]').select2({
     allowClear: true,
@@ -330,7 +387,59 @@ $('[name="category_id"]').select2({
         cache: true
     },
     }).on('select2:open', () => {
-    $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/category/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
+    $(".select2-results:not(:has(a))").append('<a href="#modal_add" data-toggle="modal" class="select_add add_cat"><i class="fas fa-plus"></i> Add</a>');
+});
+
+$(document).on('click', '.add_cat', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('[name="category_id"]').select2("close");
+
+    $.ajax({
+        url: '{!! route('item.modal_cat') !!}',
+        type: 'post',
+        dataType: 'html',
+        data: {_token:'{!! csrf_token() !!}'},
+    })
+    .done(function(data) {
+        $('.modal_show').html(data);
+    });
+});
+
+$(document).on('submit', '#simpanCategory', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('.btn_add').prop('disabled', true);
+
+    $.ajax({
+        url: '{!! route('item.create_cat') !!}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:function(){
+            $('.btn_add').html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...');
+        }
+    })
+    .done(function(json) {
+        $.notify(json.message,{
+            position:"top center",
+            className :json.class_name
+        });
+        $('.btn_add').prop('disabled', false);
+        $('#modal_add .close').click();
+    })
+    .fail(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    })
+    .always(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    });
+
 });
 
 $('[name="unit_id"]').select2({
@@ -353,9 +462,61 @@ $('[name="unit_id"]').select2({
         cache: true
     },
     }).on('select2:open', () => {
-    $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/unit/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
+    $(".select2-results:not(:has(a))").append('<a href="#modal_add" data-toggle="modal" class="select_add add_unit"><i class="fas fa-plus"></i> Add</a>');
 });
 
+$(document).on('click', '.add_unit', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+
+    $('[name="unit_id"]').select2("close");
+
+    $.ajax({
+        url: '{!! route('item.modal_unit') !!}',
+        type: 'post',
+        dataType: 'html',
+        data: {_token:'{!! csrf_token() !!}'},
+    })
+    .done(function(data) {
+        $('.modal_show').html(data);
+    });
+});
+
+$(document).on('submit', '#simpanUnit', function(event) {
+    event.preventDefault();
+    /* Act on the event */
+    $('.btn_add').prop('disabled', true);
+
+    $.ajax({
+        url: '{!! route('item.create_unit') !!}',
+        type: 'post',
+        dataType: 'json',
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:function(){
+            $('.btn_add').html('<i class="spinner-border spinner-border-sm"></i> Menyimpan...');
+        }
+    })
+    .done(function(json) {
+        $.notify(json.message,{
+            position:"top center",
+            className :json.class_name
+        });
+        $('.btn_add').prop('disabled', false);
+        $('#modal_add .close').click();
+    })
+    .fail(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    })
+    .always(function() {
+        $('.btn_add').prop('disabled', false);
+        $('.btn_add').html('<i class="fa fa-check"></i> Simpan');
+    });
+
+});
 
 $('[name="account_buy"]').select2({
     allowClear: true,
@@ -476,16 +637,16 @@ $('#summernote').summernote({
     height: $(document).height() - ($("#Maintable").height() + $("#TblTop").height() + 60),
     placeholder: 'Deskripsi produk...',
     tabsize: 2,
-    lineHeights: ['0.5', '1.0','1.5','2.0','2.5','3.0'],
     toolbar: [
           ['style', ['style']],
-          ['font', ['bold', 'underline', 'clear']],
+          ['font', ['bold', 'underline','italic', 'clear']],
+          ['fontsize', ['fontsize']],
           ['color', ['color']],
           ['para', ['ul', 'ol', 'paragraph']],
-          ['height', ['height']],
+          ['height', ['height','lineHeights']],
           ['table', ['table']],
           ['insert', ['picture', ]],
-          ['view', ['fullscreen', 'codeview']]
+          ['view', ['fullscreen', 'codeview']],
         ]
 });
 
@@ -539,5 +700,6 @@ if($('#customSwitchInventory').is(':checked')){
 } else {
     $('#inventory_item tbody').css('display','none');
 }
+
 </script>
 @endsection

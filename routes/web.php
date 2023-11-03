@@ -39,21 +39,17 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::post('supplier/ajax', [SupplierController::class, 'ajax'])->name('supplier.ajax');
-Route::post('employee/ajax', [EmployeeController::class, 'ajax'])->name('employee.ajax');
-
 Route::prefix('item')->group(function () {
     Route::get('{item}/unit_conversion', [ItemController::class, 'unit_conversion'])->name('item.unit_conversion');
-    Route::post('unit', [ItemController::class, 'unit'])->name('item.unit');
-});
+    Route::put('unit/{item}', [ItemController::class, 'unit'])->name('item.unit');
+    Route::post('modal_cat', [ItemController::class, 'modal_cat'])->name('item.modal_cat');
+    Route::post('create_cat', [ItemController::class, 'create_cat'])->name('item.create_cat');
 
-Route::prefix('customer')->group(function () {
-    Route::post('ajax', [CustomerController::class, 'ajax'])->name('customer.ajax');
-    Route::get('bicycle/{customer}/create', [CustomerController::class, 'add'])->name('customer.add');
-    Route::get('bicycle/{bicycle}/edit', [CustomerController::class, 'ubah'])->name('customer.ubah');
-    Route::put('bicycle/{bicycle}', [CustomerController::class, 'perbarui'])->name('customer.perbarui');
-    Route::delete('bicycle/{bicycle}', [CustomerController::class, 'hapus'])->name('customer.hapus');
-    Route::post('bicycle/{customer}', [CustomerController::class, 'save'])->name('customer.save');
+    Route::post('modal_brand', [ItemController::class, 'modal_brand'])->name('item.modal_brand');
+    Route::post('create_brand', [ItemController::class, 'create_brand'])->name('item.create_brand');
+
+    Route::post('modal_unit', [ItemController::class, 'modal_unit'])->name('item.modal_unit');
+    Route::post('create_unit', [ItemController::class, 'create_unit'])->name('item.create_unit');
 });
 
 Route::prefix('purchase')->group(function () {
@@ -110,15 +106,11 @@ Route::resource('setting/brand', BrandController::class);
 Route::resource('setting/category', CategoryController::class);
 
 Route::resource('item', ItemController::class);
-Route::resource('supplier', SupplierController::class);
-Route::resource('employee', EmployeeController::class);
-Route::resource('customer', CustomerController::class);
 
 Route::resource('contact', ContactController::class);
 Route::resource('expenses', ExpensesController::class);
 
 Route::prefix('api')->group(function () {
-    
     Route::get('ajax_product', [AjaxController::class, 'ajax_product'])->name('api.ajax_product');
     Route::get('ajax_brand', [AjaxController::class, 'ajax_brand'])->name('api.ajax_brand');
     Route::get('ajax_category', [AjaxController::class, 'ajax_category'])->name('api.ajax_category');

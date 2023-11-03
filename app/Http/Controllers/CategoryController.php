@@ -68,11 +68,11 @@ class CategoryController extends Controller
             else{
                 if( $request->input('restore') === 'restore' ){
                     Category::whereIn('id',$request->id)->restore();
-                    return redirect('setting/category')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/category')->with('success', 'Data berhasil dipulihkan');
                 }
                 elseif( $request->input('forever') === 'forever' ){
                     Category::whereIn('id',$request->id)->forcedelete();
-                    return redirect('setting/category')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/category')->with('success', 'Data berhasil dihapus secara permanen');
                 }
             }
         } catch (\Throwable $th) {

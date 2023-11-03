@@ -34,7 +34,7 @@ return new class extends Migration
             $table->decimal('credit_limit', 15, 0);
             $table->integer('payable_checked')->length(1);
             $table->decimal('payable_limit', 15, 0);
-            $table->char('profile',100)->nullable();
+            $table->char('profile',225)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

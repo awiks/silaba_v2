@@ -34,12 +34,21 @@
                 <tbody>
                     @if ( count($contact) > 0 )
                         @foreach ($contact as $value)
+
+                        @php
+                            $array_type=[];
+                            foreach (json_decode($value->contact_type) as  $val) {
+                                $array_type[] = '<span class="badge badge-rounded badge-outline-info">'.$val.'</span>';
+                            }
+                            $contact_type= implode(' ', array_filter($array_type));
+                        @endphp 
+
                             <tr>
                                 <td>
                                     <input type="checkbox" value="{{ $value->id }}" name="id[]">
                                 </td>
                                 <td>{{ $value->nickname }}</td>
-                                <td>{{ $value->contact_type }}</td>
+                                <td>{!! $contact_type !!}</td>
                                 <td>{{ $value->contact_name }}</td>
                                 <td>{{ $value->emails }}</td>
                                 <td>{{ $value->handphone }}</td>
@@ -50,7 +59,7 @@
                         @endforeach
                     @else 
                         <tr>
-                            <td colspan="6">Data kosong</td>
+                            <td colspan="8">Data kosong</td>
                         </tr>
                     @endif
                 </tbody>

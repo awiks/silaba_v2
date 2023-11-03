@@ -108,11 +108,11 @@ class AccountCategoryController extends Controller
             else{
                 if( $request->input('restore') === 'restore' ){
                     Account_category::whereIn('id',$request->id)->restore();
-                    return redirect('setting/account_category')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/account_category')->with('success', 'Data berhasil dipulihkan');
                 }
                 elseif( $request->input('forever') === 'forever' ){
                     Account_category::whereIn('id',$request->id)->forcedelete();
-                    return redirect('setting/account_category')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/account_category')->with('success', 'Data berhasil dihapus secara permanen');
                 }
             }
         } catch (\Throwable $th) {

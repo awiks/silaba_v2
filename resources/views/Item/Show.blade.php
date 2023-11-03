@@ -92,11 +92,11 @@
                     @foreach ($unit as $value)
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ $value->unit->unit_name }}</td>
-                                <td>{{ $value->amount }}</td>
-                                <td>{{ number_format($value->buy_price,0,',','.') }}</td>
-                                <td>{{ number_format($value->sell_price,0,',','.') }}</td>
-                                <td>{{ $value->unit_type == 1 ? 'Satuan Dasar' : 'Konversi' }}</td>
+                                <td>{{ $value['unit_name'] }}</td>
+                                <td>{{ $value['amount'] }}</td>
+                                <td>{{ number_format($value['buy_price'],0,',','.') }}</td>
+                                <td>{{ number_format($value['sell_price'],0,',','.') }}</td>
+                                <td>{{ $value['unit_type'] }}</td>
                             </tr>
                     @endforeach
                 </tbody>

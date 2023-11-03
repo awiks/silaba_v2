@@ -17,6 +17,7 @@ class Item extends Model
         'barcode',
         'brand_id',
         'category_id',
+        'unit',
         'item_name',
         'description',
         'buy_checked',

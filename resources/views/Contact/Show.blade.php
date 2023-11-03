@@ -26,9 +26,8 @@
                         <td width="2%">:</td>
                         <td>
                             @php
-                                $explode_type =  explode(",",$contact->contact_type);
                                 $array_type=[];
-                                foreach ($explode_type as  $val) {
+                                foreach (json_decode($contact->contact_type) as  $val) {
                                     $array_type[] = '<span class="badge badge-rounded badge-outline-info">'.$val.'</span>';
                                 }
         

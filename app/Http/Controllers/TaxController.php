@@ -110,11 +110,11 @@ class TaxController extends Controller
             else{
                 if( $request->input('restore') === 'restore' ){
                     Tax::whereIn('id',$request->id)->restore();
-                    return redirect('setting/tax')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/tax')->with('success', 'Data berhasil dipulihkan');
                 }
                 elseif( $request->input('forever') === 'forever' ){
                     Tax::whereIn('id',$request->id)->forcedelete();
-                    return redirect('setting/tax')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/tax')->with('success', 'Data berhasil dihapus secara permanen');
                 }
             }
         } catch (\Throwable $th) {

@@ -18,7 +18,7 @@ class AjaxController extends Controller
     {
         $term = trim($request->q);
 
-        $brands = Brand::where('name_brand', 'LIKE', "%$term%")->limit(5)->get();
+        $brands = Brand::where('name_brand', 'LIKE', "%$term%")->limit(10)->get();
 
         $formatted_brands = [];
 
@@ -34,7 +34,7 @@ class AjaxController extends Controller
     {
         $term = trim($request->q);
 
-        $categories = Category::where('category_name', 'LIKE', "%$term%")->limit(5)->get();
+        $categories = Category::where('category_name', 'LIKE', "%$term%")->limit(10)->get();
 
         $formatted_categories = [];
 
@@ -49,7 +49,8 @@ class AjaxController extends Controller
     {
         $term = trim($request->q);
 
-        $units = Unit::where('unit_name', 'LIKE', "%$term%")->limit(5)->get();
+        $units = Unit::where('unit_name', 'LIKE', "%$term%")
+        ->limit(10)->get();
 
         $formatted_units = [];
 
@@ -95,62 +96,60 @@ class AjaxController extends Controller
     public function ajax_product(Request $request)
     {
         if ($request->ajax()) {
-            $data = Item::select('*')->with('brand',function($join){
-                                    $join->select([
-                                        'id',
-                                        'name_brand'
-                                    ]);
-                                })->with('category',function($join){
-                                    $join->select([
-                                        'id',
-                                        'category_name'
-                                    ]);
-                                })->with('unit_conversion',function($join){
-                                    $join->select([
-                                        'item_id',
-                                        'unit_id',
-                                        'buy_price'
-                                    ])->with('unit',function($join){
-                                        $join->select([
-                                            'id',
-                                            'unit_name'
-                                        ]);
-                                    })->where('unit_type',1);
-                                })->orderBy('id','desc')->get();
 
-            return DataTables::of($data)
-                            ->addColumn('name',function($rows){
-                                return '<a href="'.url("/item/{$rows->id}").'">'.$rows->item_name.'</a>';
-                            })->addColumn('category',function($rows){
-                                return $rows->category->category_name;
-                            })->addColumn('brand',function($rows){
-                                return $rows->brand->name_brand;
-                            })->addColumn('buy_price',function($rows){
-                                foreach ($rows->unit_conversion as $value) {
-                                    return number_format($value->buy_price,0,',','.');
-                                }
-                            })->addColumn('unit_conversion',function($rows){
-                                foreach ($rows->unit_conversion as $value) {
-                                    return $value->unit->unit_name;
-                                }
-                            })
-                            ->addColumn('create',function($rows){
-                                return date('d/m/Y H:i',strtotime($rows->updated_at));
-                            })
-                            ->rawColumns(['name'])//FOR READ HTML
-                            ->toJson();
+            $data = Item::select('*')->with('brand',function($join){
+                            $join->select([
+                                'id',
+                                'name_brand'
+                            ]);
+                        })->with('category',function($join){
+                            $join->select([
+                                'id',
+                                'category_name'
+                            ]);
+                        })->orderBy('id','desc')->get();
+
+            $array_item = array();
+            foreach ($data as $item) {
+
+                $unit_decode = json_decode($item->unit);
+                $array_unit =  array_search('1',array_column($unit_decode,'unit_type'));
+                $unit_ = $unit_decode[$array_unit];
+
+                $unit = Unit::where('id',$unit_->unit_id)->first();
+
+                $array_item[] = array(
+                    'image' => '<a href="'.$item->images.'" data-max-width="600" data-footer="'.$item->brand->name_brand.'" data-title="'.$item->item_name.'" data-toggle="lightbox"><img src="'.$item->images.'" class="w-50 rounded-circle"></a>',
+                    'name' => '<a href="'.url("/item/{$item->id}").'">'.$item->item_name.'</a>',
+                    'code_sku' => $item->code_sku,
+                    'barcode' => $item->barcode ? $item->barcode : '-',
+                    'item_name' => $item->item_name,
+                    'category' => $item->category->category_name,
+                    'brand' => $item->brand->name_brand,
+                    'unit' =>$unit->unit_name,
+                    'buy_price' =>'Rp. '.number_format($unit_->buy_price,0,',','.'),
+                    'sell_price' =>'Rp. '.number_format($unit_->sell_price,0,',','.'),
+                    'qty' => 0,
+                    'created' =>date('d/m/Y H:i',strtotime($item->updated_at)),
+                );
+            }
+
+            return DataTables::of($array_item)
+                                ->rawColumns(['name','image'])//FOR READ HTML
+                                ->toJson();
         }
     }
 
     public function ajax_contact(Request $request)
     {
         if ($request->ajax()) {
-            
+
             $filter = $request->filter;
             $array  = array('all','Pelanggan','Supplier','Pegawai','Lainnya');
+
             $check  = $filter == 'all' ? '' : $array[$filter];
             $terms = explode(',',$check);
-            
+
             $data = Contact::where(function($query) use($terms) {
                         foreach($terms as $term) {
                             $query->orWhere('contact_type', 'like', "%$term%");
@@ -158,9 +157,9 @@ class AjaxController extends Controller
                     })->get();
                 $array = array();
                 foreach ($data as  $value) {
-                    $explode_type =  explode(",",$value->contact_type);
+
                     $array_type=[];
-                    foreach ($explode_type as  $val) {
+                    foreach (json_decode($value->contact_type) as  $val) {
                         $array_type[] = '<span class="badge badge-rounded badge-outline-info">'.$val.'</span>';
                     }
 

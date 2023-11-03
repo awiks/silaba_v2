@@ -4,9 +4,24 @@
 
 <div class="card elevation-0">
     <div class="card-header">
-        <button class="btn btn-primary" onclick="location.href='{{ url('item/create') }}'">
+
+        <button type="button" class="btn btn-primary" onclick="location.href='{{ url('item/create') }}'">
             <i class="fas fa-plus-circle"></i> Tambah
         </button>
+
+        <div class="d-inline-flex">
+            <button type="button" class="btn btn-info" data-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-file-import"></i> Impor
+            </button>
+            <div class="dropdown-menu" role="menu">
+                <a class="dropdown-item add_impor" data-toggle="modal" href="#modal_add">Impor Produk Baru</a>
+                <a class="dropdown-item add_impor_update" data-toggle="modal" href="#modal_add">Impor Update Produk</a>
+            </div>
+        </div>
+
+        <div class="card-tools">
+            
+        </div>
     </div>
     <div class="card-body">
 
@@ -14,15 +29,16 @@
             <table class="table table-striped" id="DataTable" width="100%">
                 <thead>
                     <tr>
+                        <th>Image</th>
+                        <th>Nama Produk</th>
                         <th>Kode/SKU</th>
                         <th>Barcode</th>
-                        <th>Nama Produk</th>
                         <th>Kategori</th>
                         <th>Merek</th>
-                        {{-- <th width="30%">Deskripsi</th> --}}
-                        <th>Harga Pokok</th>
+                        <th>Harga Beli</th>
+                        <th>Harga Jual</th>
+                        <th>Qty</th>
                         <th>Satuan Terkecil</th>
-                        <th>Dibuat</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -37,6 +53,10 @@
 
 @section('Notify')
 @include('Template.Notify')
+@endsection
+
+@section('Modal')
+@include('Template.Modal')
 @endsection
 
 @section('javascript')
@@ -63,12 +83,12 @@ var table = $('#DataTable').DataTable({
             extension: '.xlsx',
             text: '<i class="far fa-file-excel text-success"></i> Excel',
             titleAttr: 'Excel',
-            className: 'btn btn-outline-secondary',
+            className: 'btn btn-outline-primary',
             init: function(api, node, config) {
                 $(node).removeClass('btn-secondary')
             },
             exportOptions: {
-                columns: [ 0,1,2,3,4,5,6,7 ]
+                columns: [ 1,2,3,4,5,6,7,8,9 ]
             },
         },
         {
@@ -77,12 +97,12 @@ var table = $('#DataTable').DataTable({
             footer: true,
             text: '<i class="far fa-file-pdf text-danger"></i> Pdf',
             titleAttr: 'PDF',
-            className: 'btn btn-outline-secondary',
+            className: 'btn btn-outline-primary',
             init: function(api, node, config) {
                 $(node).removeClass('btn-secondary')
             },
             exportOptions: {
-                columns: [ 0,1,2,3,4,5,6,7 ]
+                columns: [ 1,2,3,4,5,6,7,8,9 ]
             },
         },
         {
@@ -95,12 +115,12 @@ var table = $('#DataTable').DataTable({
             footer: true,
             text: '<i class="fas fa-print text-info"></i> Print</div>',
             titleAttr: 'Print',
-            className: 'btn btn-outline-secondary',
+            className: 'btn btn-outline-primary',
             init: function(api, node, config) {
                 $(node).removeClass('btn-secondary')
             },
             exportOptions: {
-                    columns: [ 0,1,2,3,4,5,6,7 ]
+                    columns: [ 1,2,3,4,5,6,7,8,9 ]
             },
         },
     ],
@@ -120,15 +140,16 @@ var table = $('#DataTable').DataTable({
     },
     deferRender:true,
     columns :[
+        { data : 'image'},
+        { data : 'name'},
         { data : 'code_sku'},
         { data : 'barcode'},
-        { data : 'name'},
         { data : 'category'},
         { data : 'brand'},
-        //  { data : 'description'},
         { data : 'buy_price'},
-        { data : 'unit_conversion'},
-        { data : 'create'},
+        { data : 'sell_price'},
+        { data : 'qty'},
+        { data : 'unit'},
     ],
     'order': [[0, 'desc']],
     columnDefs: [{
@@ -137,5 +158,9 @@ var table = $('#DataTable').DataTable({
     }]
 });
 
+$(document).on('click', '[data-toggle="lightbox"]', function(event) {
+    event.preventDefault();
+    $(this).ekkoLightbox();
+});
 </script>
 @endsection

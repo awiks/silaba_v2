@@ -68,11 +68,11 @@ class UnitController extends Controller
             else{
                 if( $request->input('restore') === 'restore' ){
                     Unit::whereIn('id',$request->id)->restore();
-                    return redirect('setting/unit')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/unit')->with('success', 'Data berhasil dipulihkan');
                 }
                 elseif( $request->input('forever') === 'forever' ){
                     Unit::whereIn('id',$request->id)->forcedelete();
-                    return redirect('setting/unit')->with('success', 'Data berhasil diperbarui');
+                    return redirect('setting/unit')->with('success', 'Data berhasil dihapus secara permanen');
                 }
             }
         } catch (\Throwable $th) {
