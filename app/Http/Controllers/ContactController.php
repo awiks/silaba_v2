@@ -17,7 +17,7 @@ class ContactController extends Controller
         $array = array(
             'title' => 'Kontak',
         );
-        
+
         return view('Contact/Index',$array);
     }
 
@@ -36,7 +36,7 @@ class ContactController extends Controller
             ],
             'account_list' => Account_list::get(),
         );
-        
+
         return view('Contact/Create',$array);
     }
 
@@ -177,7 +177,7 @@ class ContactController extends Controller
             }
 
             $validate['account_bank'] = json_encode($array_bank);
-            
+
             $contact->update($validate);
             return redirect('/contact')->with('success', 'Data berhasil diperbarui');
         } catch (\Throwable $th) {
@@ -194,7 +194,7 @@ class ContactController extends Controller
             $contact->delete();
             session()->flash('success','Data berhasil dihapus');
             return response()->json(array('status' => 1 ));
-            
+
         } catch (\Throwable $th) {
             session()->flash('error','Data gagal dihapus');
             return response()->json(array('status' => 2 ));
@@ -204,10 +204,10 @@ class ContactController extends Controller
     public function recycle_bin()
     {
         $array = array(
-            'title' => 'Pengaturan / Keranjang Sampah Kontak',
+            'title' => 'Kontak / Keranjang Sampah Kontak',
             'contact' => Contact::onlyTrashed()->orderBy('id','asc')->get(),
         );
-        
+
         return view('Contact/Recycle_bin',$array);
     }
 

@@ -39,6 +39,9 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+
 Route::prefix('item')->group(function () {
     Route::get('{item}/unit_conversion', [ItemController::class, 'unit_conversion'])->name('item.unit_conversion');
     Route::put('unit/{item}', [ItemController::class, 'unit'])->name('item.unit');

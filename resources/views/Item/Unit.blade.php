@@ -30,6 +30,7 @@
                     @if (old('unit_id') )
 
                     @foreach ( old('unit_id') as $key => $result )
+                    
                         <tr>
                             <td>
                                 <select name="unit_id[]" id="unit_{{ $key }}" class="form-control @error('unit_id.'.$key.'') is-invalid @enderror"  style="width:100%">

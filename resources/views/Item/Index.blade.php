@@ -20,7 +20,7 @@
         </div>
 
         <div class="card-tools">
-            
+
         </div>
     </div>
     <div class="card-body">
@@ -61,6 +61,7 @@
 
 @section('javascript')
 <script type="text/javascript">
+
 $(document).ready(function () {
 
     $('.dataTables_filter input[type="search"]').css(

@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}" />
          {{-- Font Awesome Icons --}}
-        <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free-6.4.2/css/all.min.css') }}">
         {{-- iCheck --}}
         <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 
@@ -84,12 +84,12 @@
 
                     <li class="nav-item">
                         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                            <i class="fas fa-expand-arrows-alt"></i>
+                            <i class="fa-solid fa-expand"></i>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                            <i class="fas fa-th-large"></i>
+                            <i class="fa-solid fa-table-cells-large"></i>
                         </a>
                     </li>
 
@@ -130,33 +130,79 @@
                     <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
                             <a href="{{ url('/') }}" class="nav-link {{ ( request()->segment(1) == '' ) ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <i class="nav-icon fa-solid fa-gauge"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
                             <a href="{{ url('/buku_induk_siswa') }}" class="nav-link {{ ( request()->segment(1) == 'buku_induk_siswa' ) ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="nav-icon fa-solid fa-book"></i>
                                 <p>Kas & Bank</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="{{ url('/buku_induk_siswa') }}" class="nav-link {{ ( request()->segment(1) == 'buku_induk_siswa' ) ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>Penjualan</p>
+                        <li class="nav-item {{ ( request()->segment(1) == 'purchase' ) ? 'menu-is-opening menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ ( request()->segment(1) == 'purchase' ) ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cart-plus"></i>
+                                <p>Penjualan <i class="right fas fa-angle-left"></i></p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url('purchase/purchase_invoice') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_invoice' ) ? 'active' : '' }}">
+                                        <i class="fa-solid fa-cash-register nav-icon"></i>
+                                    <p>Tagihan Penjualan</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('purchase/purchase_order') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_order' ) ? 'active' : '' }}">
+                                    <i class="fa-solid fa-truck nav-icon"></i>
+                                    <p>Pengiriman Penjualan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('purchase/purchase_order') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_order' ) ? 'active' : '' }}">
+                                    <i class="fas fa-shopping-basket nav-icon"></i>
+                                    <p>Pesanan Penjualan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url('purchase/purchase_offer') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_offer' ) ? 'active' : '' }}">
+                                    <i class="fas fa-tags nav-icon"></i>
+                                    <p>Penawaran Penjualan</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
 
                             {{-- <li class="nav-header">INVENTORY</li> --}}
 
-                            <li class="nav-item">
-                                <a href="{{ url('purchase') }}" class="nav-link {{ ( request()->segment(1) == 'purchase' ) ? 'active' : '' }}">
-                                    <i class="nav-icon far fa-credit-card"></i>
-                                    <p>Pembelian</p>
+                            <li class="nav-item {{ ( request()->segment(1) == 'purchase' ) ? 'menu-is-opening menu-open' : '' }}">
+                                <a href="#" class="nav-link {{ ( request()->segment(1) == 'purchase' ) ? 'active' : '' }}">
+                                    <i class="nav-icon fa-solid fa-bag-shopping"></i>
+                                    <p>Pembelian <i class="right fas fa-angle-left"></i></p>
                                 </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="{{ url('purchase/purchase_invoice') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_invoice' ) ? 'active' : '' }}">
+                                        <i class="fas fa-shopping-bag nav-icon"></i>
+                                        <p>Tagihan Pembelian</p>
+                                    </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('purchase/purchase_order') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_order' ) ? 'active' : '' }}">
+                                        <i class="fas fa-shopping-basket nav-icon"></i>
+                                        <p>Pesanan Pembelian</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('purchase/purchase_offer') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_offer' ) ? 'active' : '' }}">
+                                        <i class="fas fa-tags nav-icon"></i>
+                                        <p>Penawaran Pembelian</p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li class="nav-item">
@@ -168,7 +214,7 @@
 
                             <li class="nav-item">
                                 <a href="{{ url('contact') }}" class="nav-link {{ ( request()->segment(1) == 'contact' ) ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-address-card"></i>
+                                    <i class="nav-icon fa-solid fa-address-card"></i>
                                     <p>Kontak</p>
                                 </a>
                             </li>
@@ -182,7 +228,7 @@
 
                             <li class="nav-item">
                                 <a href="{{ url('item') }}" class="nav-link {{ ( request()->segment(1) == 'item' ) ? 'active' : '' }}">
-                                    <i class="nav-icon fa fa-archive"></i>
+                                    <i class="nav-icon fa-solid fa-box"></i>
                                     <p>Produk</p>
                                 </a>
                             </li>
@@ -234,7 +280,7 @@
 
         {{-- main-footer --}}
         <footer class="main-footer">
-            <strong>Kasnawi Point Of Sale</strong>
+            <strong>PT Glocal Jaya Raya</strong>
             <div class="float-right d-none d-sm-inline-block">
                 Versi 4.01 | Framework Laravel V 10.0 | Template Admin Lte
             </div>
