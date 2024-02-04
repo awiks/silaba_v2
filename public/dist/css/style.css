@@ -698,3 +698,16 @@ outline:0px;
   border: 1px solid #6e6e6e;
   color: #6e6e6e;
 }
+
+
+ .nav-treeview>.nav-item>.nav-link.active,  .nav-treeview>.nav-item>.nav-link.active:hover {
+  border-radius: 20px;
+}
+
+ .nav-treeview>.nav-item>.nav-link:focus,  .nav-treeview>.nav-item>.nav-link:hover {
+  border-radius: 20px;
+}
+
+.input-group-text {
+  border-radius: 14px;
+}

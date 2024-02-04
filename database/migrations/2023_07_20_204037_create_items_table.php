@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('inventory_checked')->length(1);
             $table->integer('minimum_stock')->nullable();
             $table->bigInteger('account_inventory');
-            $table->char('images',100)->nullable();
+            $table->longText('images')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

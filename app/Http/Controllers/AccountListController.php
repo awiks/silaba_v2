@@ -23,7 +23,7 @@ class AccountListController extends Controller
                                         $join->select('id','header_code','normal_balance','header_name');
                                 });
                             });
-                            })->orderBy('id','asc')->paginate(),
+                            })->orderBy('id','asc')->paginate(50),
         );
         
         return view('Setting/Account_list/Index',$array);

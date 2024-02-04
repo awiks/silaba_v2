@@ -1,11 +1,10 @@
 @extends('Template.App')
 @section('title',$title)
 @section('content')
-<form action="{{ url('item') }}" method="post" enctype="multipart/form-data">
+<form action="{{ url('item') }}" id="frm" method="post" enctype="multipart/form-data">
     @csrf
 <div class="card elevation-0">
     <div class="card-body">
-
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -81,16 +80,17 @@
         </div>
 
         <div class="form-group">
-            <label>Image</label>
+            <label>Gambar Produk</label>
+            <i class="text-danger">( Gambar bisa lebih dari satu. )</i>
             <div class="input-group">
                 <div class="custom-file">
-                  <input type="file" class="custom-file-input @error('images') is-invalid @enderror" name="images">
+                  <input type="file" class="custom-file-input @error('images.*') is-invalid @enderror" name="images[]" multiple>
                   <label class="custom-file-label">
                   JPG | PNG | JPEG | SVG
                   </label>
                 </div>
             </div>
-            @error('images')
+            @error('images.*')
                 <span class="error invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
@@ -289,6 +289,8 @@
 
 @section('javascript')
 <script type="text/javascript">
+$(document).ready(function () {
+
 bsCustomFileInput.init();
 
 $('[name="brand_id"]').select2({
@@ -701,5 +703,7 @@ if($('#customSwitchInventory').is(':checked')){
     $('#inventory_item tbody').css('display','none');
 }
 
+
+});
 </script>
 @endsection

@@ -30,30 +30,22 @@
                     @if (old('unit_id') )
 
                     @foreach ( old('unit_id') as $key => $result )
-                    
                         <tr>
                             <td>
                                 <select name="unit_id[]" id="unit_{{ $key }}" class="form-control @error('unit_id.'.$key.'') is-invalid @enderror"  style="width:100%">
-                                    @if( old('unit_id')[$key] != null )
-                                    <option value="{{ old('unit_id')[$key] }}">{{ $units->where('id', intval(old('unit_id')[$key]))->first()->unit_name}}</option>
+                                    <option value="">-- Pilih --</option>
+                                    @if (Request::old('unit_id')[$key] != null )
+                                    <option value="{{ old('unit_id')[$key] }}" selected>{{ $units->where('id', intval(old('unit_id')[$key]))->first()->unit_name}}</option>
                                     @endif
                                 </select>
                             </td>
-                            <td>
-                                <input type="number" value="{{ old('amount')[$key] }}" name="amount[]" class="form-control text-center @error('amount.'.$key.'') is-invalid @enderror">
-                            </td>
-                            <td>
-                                <input type="number" value="{{ old('buy_price')[$key] }}" name="buy_price[]" class="form-control text-center @error('buy_price.'.$key.'') is-invalid @enderror">
-                            </td>
-                            <td>
-                                <input type="number"  value="{{ old('sell_price')[$key] }}" name="sell_price[]" class="form-control text-center @error('sell_price.'.$key.'') is-invalid @enderror">
-                            </td>
-                            <td>
-                                <input type="text" value="{{ old('unit_type')[$key] }}" name="unit_type[]" class="form-control"  readonly>
-                            </td>
+                            <td><input type="number" value="{{ old('amount')[$key] }}" name="amount[]" class="form-control text-center @error('amount.'.$key.'') is-invalid @enderror"></td>
+                            <td><input type="number" value="{{ old('buy_price')[$key] }}" name="buy_price[]" class="form-control text-center @error('buy_price.'.$key.'') is-invalid @enderror"></td>
+                            <td><input type="number"  value="{{ old('sell_price')[$key] }}" name="sell_price[]" class="form-control text-center @error('sell_price.'.$key.'') is-invalid @enderror"></td>
+                            <td><input type="text" value="{{ old('unit_type')[$key] }}" name="unit_type[]" class="form-control"  readonly></td>
                             <td>
                                 @if ($key > 0)
-                                <button type="button" class="btn btn-default remove"><i class="fas fa-times-circle"></i></button>
+                                <button type="button" class="btn btn-danger remove"><i class="fas fa-times-circle"></i></button>
                                 @endif
                             </td>
                         </tr>
@@ -61,28 +53,21 @@
 
                     @else
 
-                    @foreach ($unit as $key => $value)
+                    @foreach ($unit as $keys => $value)
                         <tr>
                             <td>
-                                <select name="unit_id[]" id="unit_{{ $key }}" class="form-control"  style="width:100%">
-                                    <option value="{{ $value['id'] }}">{{ $units->where('id', intval($value['id']))->first()->unit_name}}</option>
+                                <select name="unit_id[]" id="unit_{{ $keys }}" class="form-control"  style="width:100%">
+                                    <option value="">-- Pilih --</option>
+                                    <option value="{{ $value['id'] }}" selected>{{ $units->where('id', intval($value['id']))->first()->unit_name}}</option>
                                 </select>
                             </td>
+                            <td><input type="number" value="{{ $value['amount'] }}" name="amount[]" class="form-control text-center"></td>
+                            <td><input type="number" value="{{ $value['buy_price'] }}" name="buy_price[]" class="form-control text-center"></td>
+                            <td><input type="number" value="{{ $value['sell_price'] }}" name="sell_price[]" class="form-control text-center"></td>
+                            <td><input type="text" value="{{ $value['unit_type'] }}" name="unit_type[]" class="form-control"  readonly></td>
                             <td>
-                                <input type="number" value="{{ $value['amount'] }}" name="amount[]" class="form-control text-center">
-                            </td>
-                            <td>
-                                <input type="number" value="{{ $value['buy_price'] }}" name="buy_price[]" class="form-control text-center">
-                            </td>
-                            <td>
-                                <input type="number" value="{{ $value['sell_price'] }}" name="sell_price[]" class="form-control text-center">
-                            </td>
-                            <td>
-                                <input type="text" value="{{ $value['unit_type'] }}" name="unit_type[]" class="form-control"  readonly>
-                            </td>
-                            <td>
-                                @if ($key > 0)
-                                <button type="button" class="btn btn-default remove"><i class="fas fa-times-circle"></i></button>
+                                @if ($keys > 0)
+                                <button type="button" class="btn btn-danger remove"><i class="fas fa-times-circle"></i></button>
                                 @endif
                             </td>
                         </tr>
@@ -124,36 +109,32 @@
 @section('javascript')
 <script type="text/javascript">
 
-var unit = {!! count($unit) !!};
+var unit = {!! old('unit_id') != null ? count(old('unit_id')) : count($unit) !!};
 for (let index = 0; index < unit; index++) {
     const element = index;
-    select_unit(element);
+    const checkID = document.getElementById('unit_'+index).value
+    select_unit(element,checkID);
 }
 
-function select_unit(Nomor)
+function select_unit(Nomor,checkID)
 {
-    $('#unit_'+Nomor).select2({
-        allowClear: true,
-        placeholder: "Cari satuan",
-        delay: 250,
-        ajax: {
-            url: '{{ route('api.ajax_unit') }}',
-            dataType: 'json',
-            data: function (params) {
-                return {
-                    q: $.trim(params.term)
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: data
-                };
-            },
-            cache: true
-        },
-        }).on('select2:open', () => {
-        $(".select2-results:not(:has(a))").append('<a href="{{ url('setting/unit/create') }}" class="select_add"><i class="fas fa-plus"></i> Add</a>');
-    });
+    $.ajax({
+      url: '{{ route('api.ajax_unit') }}',
+      type: 'get',
+      dataType: 'json',
+    })
+    .done(function(json) {
+      json.forEach(element => {
+        if (checkID != element.id) {
+            if (checkID == element.id ) {
+                selected = 'selected';
+            } else {
+                selected = '';
+            }
+            $('#unit_'+Nomor).append('<option value="'+element.id+'" '+selected+'>'+element.text+'</option>')
+        }
+      });
+    })
 }
 
 function BarisBaru()
@@ -161,7 +142,7 @@ function BarisBaru()
     var Nomor = $('#TableSatuan tbody tr').length;
     var Baris  = '<tr>';
     Baris += '<td>';
-    Baris += '<select name="unit_id[]" id="unit_'+Nomor+'"  class="form-control" style="width:100%"></select>';
+    Baris += '<select name="unit_id[]" id="unit_'+Nomor+'"  class="form-control" style="width:100%"><option value="">-- Pilih --</option></select>';
     Baris += '</td>';
     Baris += '<td>';
     Baris += '<input type="number" name="amount[]" class="form-control text-center">';
@@ -172,9 +153,9 @@ function BarisBaru()
     Baris += '<td>';
     Baris += '<input type="number" name="sell_price[]" class="form-control text-center">';
     Baris += '</td>';
-    Baris += '<td><input type="text" value="Konversi" class="form-control" disabled></td>';
+    Baris += '<td><input type="text" name="unit_type[]" value="Konversi" class="form-control" readonly></td>';
     Baris += '<td>';
-    Baris += '<button type="button" class="btn btn-default remove"><i class="fas fa-times-circle"></i></button>';
+    Baris += '<button type="button" class="btn btn-danger remove"><i class="fas fa-times-circle"></i></button>';
     Baris += '</td>';
     Baris += '</tr>';
 
@@ -205,13 +186,9 @@ $('body').on('click', '#BarisBaru', function(event) {
             add_field +=$(this).find('td:nth-child(2) input').focus();
         }
 
-        if( $(this).find('td:nth-child(1) select').val() == null )
+        if( $(this).find('td:nth-child(1) select').val() == '' )
         {
             add_field +=$(this).find('td:nth-child(1) select').focus();
-        }
-
-        if( $(this).find('td:nth-child(1) select').val() !== null ){
-            Item += $(this).find('td:nth-child(1) select').val() + ',';
         }
 
         Nomor++;
@@ -227,6 +204,7 @@ $('body').on('click', '#BarisBaru', function(event) {
 $(document).on('click','.remove',function(){
     $(this).closest('tr').remove();
 });
+
 
 </script>
 @endsection

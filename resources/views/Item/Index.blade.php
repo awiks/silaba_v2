@@ -37,6 +37,7 @@
                         <th>Merek</th>
                         <th>Harga Beli</th>
                         <th>Harga Jual</th>
+                        <th>Margin</th>
                         <th>Qty</th>
                         <th>Satuan Terkecil</th>
                     </tr>
@@ -149,6 +150,7 @@ var table = $('#DataTable').DataTable({
         { data : 'brand'},
         { data : 'buy_price'},
         { data : 'sell_price'},
+        { data : 'margin'},
         { data : 'qty'},
         { data : 'unit'},
     ],

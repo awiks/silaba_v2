@@ -33,6 +33,9 @@
 
        {{-- Sweatalert --}}
        <link rel="stylesheet" href="{{ asset('plugins/bootstrap-sweetalert/dist/sweetalert.css') }}">
+       
+       {{-- Images Loader --}}
+       <link rel="stylesheet" href="{{ asset('plugins/images-loader/jquery.imagesloader.css') }}">
 
        {{-- Ekko Lightbox --}}
        <link rel="stylesheet" href="{{ asset('plugins/ekko-lightbox/ekko-lightbox.css') }}">
@@ -103,8 +106,8 @@
         <aside class="main-sidebar  sidebar-light-desnaz">
             {{-- Brand Logo --}}
             <a href="{{ url('/') }}" class="brand-link">
-                <img src="{{ asset('dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">System POS</span>
+                <img src="{{ asset('dist/img/icon_logo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">siLaba ERP</span>
             </a>
             {{-- end Brand Logo --}}
 
@@ -142,32 +145,32 @@
                             </a>
                         </li>
 
-                        <li class="nav-item {{ ( request()->segment(1) == 'purchase' ) ? 'menu-is-opening menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ ( request()->segment(1) == 'purchase' ) ? 'active' : '' }}">
+                        <li class="nav-item {{ ( request()->segment(1) == 'sale' ) ? 'menu-is-opening menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ ( request()->segment(1) == 'sale' ) ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cart-plus"></i>
                                 <p>Penjualan <i class="right fas fa-angle-left"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('purchase/purchase_invoice') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_invoice' ) ? 'active' : '' }}">
+                                    <a href="{{ url('sales/bill_ofsale') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'bill_ofsale' ) ? 'active' : '' }}">
                                         <i class="fa-solid fa-cash-register nav-icon"></i>
                                     <p>Tagihan Penjualan</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('purchase/purchase_order') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_order' ) ? 'active' : '' }}">
+                                    <a href="{{ url('sales/sales_delivery') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'sales_delivery' ) ? 'active' : '' }}">
                                     <i class="fa-solid fa-truck nav-icon"></i>
                                     <p>Pengiriman Penjualan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('purchase/purchase_order') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_order' ) ? 'active' : '' }}">
+                                    <a href="{{ url('sales/sales_order') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'sales_order' ) ? 'active' : '' }}">
                                     <i class="fas fa-shopping-basket nav-icon"></i>
                                     <p>Pesanan Penjualan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url('purchase/purchase_offer') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_offer' ) ? 'active' : '' }}">
+                                    <a href="{{ url('sale/purchase_offer') }}" class="nav-link pl-1 {{ ( request()->segment(2) == 'purchase_offer' ) ? 'active' : '' }}">
                                     <i class="fas fa-tags nav-icon"></i>
                                     <p>Penawaran Penjualan</p>
                                     </a>
@@ -353,6 +356,9 @@
 
     {{-- notify --}}
    <script src="{{ asset('plugins/notify/notify.min.js') }}"></script>
+
+    {{-- Images Loader --}}
+   <script src="{{ asset('plugins/images-loader/jquery.imagesloader-1.0.1.js') }}"></script>
 
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <script src="{{ asset('dist/js/function.js') }}"></script>

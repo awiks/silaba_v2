@@ -1,4 +1,4 @@
-@extends('Template.App') 
+@extends('Template.App')
 @section('title',$title)
 @section('content')
 <form action="{{ url('setting/account_list') }}" method="post">
@@ -11,7 +11,7 @@
             <select name="category_id" class="form-control @error('category_id') is-invalid @enderror">
                 <option value="">-- Pilih --</option>
                 @foreach ($account_category as $value)
-                <option value="{{ $value->id }}" @if ( $value->id == old('category_id')   ) selected @endif>{{ $value->category_code.' - '.$value->account_sub_header->account_header->header_name.' - '.$value->account_sub_header->header_sub_name.' - '.$value->categories_name }}</option>
+                <option value="{{ $value->id }}" @if ( $value->id == old('category_id')) selected @endif>{{ $value->category_code.' - '.$value->account_sub_header->account_header->header_name.' - '.$value->account_sub_header->header_sub_name.' - '.$value->categories_name }}</option>
                 @endforeach
             </select>
             @error('category_id')
@@ -79,5 +79,8 @@ $('body').on('change', '[name="category_id"]', function(event) {
     });
 
 });
+
+
+
 </script>
 @endsection

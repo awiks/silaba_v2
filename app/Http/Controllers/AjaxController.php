@@ -118,6 +118,11 @@ class AjaxController extends Controller
 
                 $unit = Unit::where('id',$unit_->unit_id)->first();
 
+                $sell_price = $unit_->sell_price ? $unit_->sell_price : 0;
+                $buy_price = $unit_->buy_price ? $unit_->buy_price : 0;
+                $margin = $sell_price != 0 ? ($sell_price - $buy_price)  / $sell_price : 0;
+                $percentase_margin = ceil($margin * 100);
+
                 $array_item[] = array(
                     'image' => '<a href="'.$item->images.'" data-max-width="600" data-footer="'.$item->brand->name_brand.'" data-title="'.$item->item_name.'" data-toggle="lightbox"><img src="'.$item->images.'" class="w-50 rounded-circle"></a>',
                     'name' => '<a href="'.url("/item/{$item->id}").'">'.$item->item_name.'</a>',
@@ -129,6 +134,7 @@ class AjaxController extends Controller
                     'unit' =>$unit->unit_name,
                     'buy_price' =>'Rp. '.number_format($unit_->buy_price,0,',','.'),
                     'sell_price' =>'Rp. '.number_format($unit_->sell_price,0,',','.'),
+                    'margin' => $percentase_margin ? $percentase_margin.'%' : 0,
                     'qty' => 0,
                     'created' =>date('d/m/Y H:i',strtotime($item->updated_at)),
                 );

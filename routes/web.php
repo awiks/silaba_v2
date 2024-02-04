@@ -7,11 +7,14 @@ use App\Http\Controllers\AccountSubHeaderController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ProductSettingController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SupplierController;
@@ -56,8 +59,11 @@ Route::prefix('item')->group(function () {
 });
 
 Route::prefix('purchase')->group(function () {
-    Route::get('/', [PurchaseController::class, 'index'])->name('purchase.index');
-    Route::get('/purchase_order', [PurchaseController::class, 'purchase_order'])->name('purchase.purchase_order');
+    Route::get('/purchase_order', [PurchaseController::class, 'index'])->name('purchase.index');
+    Route::get('/purchase_order/create', [PurchaseController::class, 'create'])->name('purchase.create');
+    
+    Route::get('/purchase_invoice', [InvoiceController::class, 'index'])->name('purchase.index');
+    Route::get('/purchase_invoice/create', [InvoiceController::class, 'create'])->name('purchase.create');
 });
 
 Route::prefix('setting')->group(function () {
@@ -98,6 +104,13 @@ Route::prefix('setting')->group(function () {
     Route::get('account_list/recycle_bin', [AccountListController::class,'recycle_bin']);
     Route::post('account_list/recycle_bin', [AccountListController::class,'restore']);
     Route::resource('account_list', AccountListController::class);
+
+    Route::get('company', [CompanyController::class,'index'])->name('company.index');
+    Route::get('company/{company}/edit', [CompanyController::class,'edit'])->name('company.edit');
+    Route::put('company/{company}', [CompanyController::class,'update'])->name('company.update');
+
+    Route::get('product', [ProductSettingController::class,'index'])->name('product.index');
+    Route::post('product/show_cat', [ProductSettingController::class,'show_cat'])->name('product.show_cat');
     
 });
 

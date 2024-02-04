@@ -22,7 +22,7 @@ class UnitConversionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unit_id' => ['array'],
+            'unit_id' => ['required','array'],
             'unit_id.*' => ['required'],
 
             'amount' => ['array'],

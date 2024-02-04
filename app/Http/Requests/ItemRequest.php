@@ -25,9 +25,9 @@ class ItemRequest extends FormRequest
         return [
             'code_sku' => ['required','sometimes','max:50',Rule::unique('items')->ignore($this->item)],
             'barcode' => ['nullable','sometimes','max:50',Rule::unique('items')->ignore($this->item)],
-            'brand_id' => ['required'],
-            'category_id' => ['required'],
-            'item_name' => ['required','max:225',Rule::unique('items')->ignore($this->item)],
+            //'brand_id' => ['required'],
+            //'category_id' => ['required'],
+            //'item_name' => ['required','max:225',Rule::unique('items')->ignore($this->item)],
             'description' => ['nullable'],
             'buy_checked' => ['sometimes'],
             'account_buy' => ['nullable','required_if:buy_checked,1'],
@@ -40,9 +40,10 @@ class ItemRequest extends FormRequest
             'inventory_checked' => ['sometimes'],
             'minimum_stock' => ['nullable','required_if:inventory_checked,1','numeric'],
             'account_inventory' => ['nullable','required_if:inventory_checked,1'],
-            'images' => ['nullable','mimes:jpg,png,jpeg,svg,webp','max:1024'],
+            'images' => ['array'],
+            'images.*' => ['nullable','mimes:jpg,png,jpeg,svg,webp','max:3072'],
 
-            'unit_id' => ['required'],
+            //'unit_id' => ['required'],
             'buy_price' => ['nullable','required_if:buy_checked,1','numeric'],
             'sell_price' => ['nullable','required_if:sell_cheked,1','numeric'],
         ];
@@ -73,8 +74,8 @@ class ItemRequest extends FormRequest
             'minimum_stock.numeric' => 'Bidang stok minimum harus berupa angka.',
             'account_inventory.required_if' => 'Akun Persediaan Barang harap dipilih',
 
-            'images.mimes' => 'Bidang gambar harus berupa file dengan tipe: jpg, png, jpeg, svg.',
-            'images.max' => 'Bidang gambar tidak boleh lebih besar dari 1024 kilobyte.',
+            'images.*.mimes' => 'Bidang gambar harus berupa file dengan tipe: jpg, png, jpeg, svg.',
+            'images.*.max' => 'Bidang gambar tidak boleh lebih besar dari 1024 kilobyte.',
         
             'unit_id.required' => 'Satuan harap dipilih',
             'buy_price.required_if' => 'Harga Beli Satuan harap diisi',

@@ -54,15 +54,22 @@ class ItemController extends Controller
      */
     public function store(ItemRequest $itemRequest)
     {  
-        try {
+       try {
 
             $validate = $itemRequest->validated();
-            if ($itemRequest->hasFile('images')) {
-                $name = now()->timestamp.".{$itemRequest->images->getClientOriginalName()}";
-                $path = $itemRequest->file('images')->storeAs('images', $name, 'public');
-                $validate['images'] = "/storage/{$path}";
+            $files = $itemRequest->file('images');
+            $name = array();
+            if ($files) {
+                foreach ( $files as $key => $value) {
+                    $fileInfo = $value->getClientOriginalName();
+                    $extension = pathinfo($fileInfo, PATHINFO_EXTENSION);
+                    $file_name = uniqid().'_'.date('Ymd').'_'.time().'.'.$extension;
+                    $path = $value->storeAs('images', $file_name, 'public');
+                    $name[] = "/storage/{$path}";
+                }
             }
 
+            $validate['images'] = json_encode($name);
             $validate['buy_checked'] = $itemRequest->buy_checked;
             $validate['sell_cheked'] = $itemRequest->sell_cheked;
             $validate['inventory_checked'] = $itemRequest->inventory_checked;
@@ -87,9 +94,9 @@ class ItemController extends Controller
             Item::create($validate);
             return redirect('/item')->with('success', 'Data berhasil disimpan');
 
-         } catch (\Throwable $th) {
-            return redirect('/item')->with('error', 'Data gagal disimpan');
-        }
+          } catch (\Throwable $th) {
+             return redirect('/item')->with('error', 'Data gagal disimpan');
+         }
     }
 
     /**
@@ -176,9 +183,9 @@ class ItemController extends Controller
 
         $unit = json_encode($array_unit);
         $item->update(array('unit'=>$unit));
-        return redirect('/item')->with('success', 'Data berhasil diperbarui');
+        return redirect()->to('item/'.$item->id)->with('success', 'Data berhasil diperbarui');
        } catch (\Throwable $th) {
-           return response()->json(array('status' => 2 ,'message' => 'Data gagal disimpan'));
+           return redirect()->back()->with('error', 'Data gagal diperbarui');
        }
     }
 
@@ -251,9 +258,9 @@ class ItemController extends Controller
             $validate['unit'] = json_encode(array_merge($array_unit,$unit_array));
             $item->update($validate);
 
-             return redirect('/item')->with('success', 'Data berhasil diperbarui');
+             return redirect('item')->with('success', 'Data berhasil diperbarui');
           } catch (\Throwable $th) {
-              return redirect('/item')->with('error', 'Data gagal diperbarui');
+              return redirect('item')->with('error', 'Data gagal diperbarui');
           }
     }
 
